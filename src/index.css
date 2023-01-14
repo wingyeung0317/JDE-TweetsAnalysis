@@ -1,13 +1,38 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+body{
+	background-color: #BFEFF3;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.homeHeader{
+	text-align: center;
+  font-size: 64px;
+  color: #14646b;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.homeContent{
+	display: block;
+}
+
+#insertInput{
+  font-size: 24px;
+}
+
+.brand{
+  padding: 12px;
+  border: 2px dotted #14646b;
+  margin: 12px;
+}
+
+.b1s{
+  background-color: #a69694;
+  color: #f2ddb3;
+}
+
+.b2s{
+  background-color: #A69572;
+  color: #f2d0cb;
+}
+
+#brandList{
+  margin: 22px;
 }
