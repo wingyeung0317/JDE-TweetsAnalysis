@@ -17,22 +17,27 @@ body{
   font-size: 24px;
 }
 
-.brand{
-  padding: 12px;
-  border: 2px dotted #14646b;
-  margin: 12px;
-}
-
 .b1s{
+  display: inline-block;
   background-color: #a69694;
   color: #f2ddb3;
+  margin: 12px;
+  padding: 6px;
+  border: 2px dotted#14646b;
 }
 
 .b2s{
+  display: inline-block;
   background-color: #A69572;
   color: #f2d0cb;
+  margin: 12px;
+  padding: 6px;
+  border: 2px dotted#14646b;
 }
 
 #brandList{
   margin: 22px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }

@@ -1,9 +1,11 @@
 import $ from 'jquery'
+import {v4} from 'uuid'
 
 const Header = ({add_brand}) => {
     const addBrand = () => {
         add_brand((prevBrand)=>{
-            return [...prevBrand, $('#insertBrand').val()];
+            console.log([...prevBrand, {id:v4(), name:$('#insertBrand').val()}]);
+            return [...prevBrand, {id:v4(), name:$('#insertBrand').val()}];
         });
     }
     return (
