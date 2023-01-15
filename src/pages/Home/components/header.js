@@ -4,8 +4,9 @@ import {v4} from 'uuid'
 const Header = ({add_brand}) => {
     const addBrand = () => {
         add_brand((prevBrand)=>{
-            console.log([...prevBrand, {id:v4(), name:$('#insertBrand').val()}]);
-            return [...prevBrand, {id:v4(), name:$('#insertBrand').val()}];
+            let value = $('#insertBrand').val()
+            console.log([...prevBrand, {id:v4(), name:value}]);
+            return [...prevBrand, {id:v4(), name:value}];
         });
     }
     return (

@@ -7,7 +7,7 @@ const Home = () => {
     return (
         <div>
             <Header add_brand={set_brand}/>
-            <List brands={brands}/>
+            <List brands={brands} del_brand={set_brand}/>
         </div>
     );
 }
