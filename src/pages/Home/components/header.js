@@ -2,12 +2,17 @@ import $ from 'jquery'
 import {v4} from 'uuid'
 
 const Header = ({add_brand}) => {
-    const addBrand = () => {
-        add_brand((prevBrand)=>{
-            let value = $('#insertBrand').val()
-            console.log([...prevBrand, {id:v4(), name:value}]);
-            return [...prevBrand, {id:v4(), name:value}];
+    async function addBrand() {
+        let clear = new Promise((resolve, reject) => {
+            add_brand((prevBrand)=>{
+                let value = $('#insertBrand').val()
+                console.log([...prevBrand, {id:v4(), name:value}]);
+                return [...prevBrand, {id:v4(), name:value}];
+            });
+            resolve("");
         });
+        let empty = await clear;
+        $('#insertBrand').val(empty)
     }
     return (
         <div className="homeHeader">
