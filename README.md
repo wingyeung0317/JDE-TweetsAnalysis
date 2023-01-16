@@ -1,5 +1,5 @@
-1.  cd backend
-    flask run
+> *   * cd backend
+    * flask run
 
-2.  cd client
-    npm start
+> *   * cd client
+    * npm start
