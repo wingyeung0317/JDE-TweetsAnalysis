@@ -1,5 +1,7 @@
-> *   * cd backend
-    * flask run
+# 1.
+>  * cd backend
+>   * flask run
 
-> *   * cd client
-    * npm start
+# 2.
+>  * cd client
+>   * npm start
