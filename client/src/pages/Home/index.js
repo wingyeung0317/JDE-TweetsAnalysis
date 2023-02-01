@@ -7,14 +7,17 @@ import { EXPORT_BRANDS } from "../../global/constrants";
 const Home = () => {
     const [brands, set_brand] = useState([]);
     function eBrands(){
+
         let exportVal = '{';
         let i = 0
         brands.map((brand) => {
-            exportVal += '"brand'+i+'": "'+brand.name+'", '
+            console.log(JSON.stringify(brand))
+            exportVal += '"brand'+i+'": '+JSON.stringify(brand)+', '
             i+=1
         });
         exportVal = exportVal.substring(0, exportVal.length - 2)
         exportVal += '}'
+        console.log(exportVal)
         exportVal = JSON.parse(exportVal);
         console.log(JSON.stringify(exportVal));
 
