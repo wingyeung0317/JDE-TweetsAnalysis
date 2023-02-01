@@ -9,6 +9,7 @@ import snscrape.modules.twitter as sntwitter
 import re
 import demoji
 import datetime
+import math
 
 app = Flask(__name__)
 
@@ -27,6 +28,7 @@ CORS(app)
 #     def __init__(self, description):
 #         self.description = description
 def reFilterSpace(text):
+    text = str(text)
     while text[0] == ' ':
         text = text[1:]
     while text[-1] == ' ':
@@ -54,9 +56,9 @@ def grapTweets(name, cashTag, qFilter, qFilterLinks, qFilterReplies, lang, qFilt
     qFilterText = ''
     addfilter = ''
     ### Transform User input to Query ###
-    for text in cashTag.split(','):
+    for text in str(cashTag).split(','):
         orCashTag += f' -"{reFilterSpace(text)}"'
-    for text in qFilter.split(','):
+    for text in str(qFilter).split(','):
         qFilterText += f' -"{reFilterSpace(text)}"'
     if qFilterLinks:
         addfilter += ' -filter:links'
@@ -64,7 +66,7 @@ def grapTweets(name, cashTag, qFilter, qFilterLinks, qFilterReplies, lang, qFilt
         addfilter += ' -filter:replies'
     if qFilterVerified:
         addfilter += ' filter:verified'
-    if reFilterSpace(qLocation) != '':
+    if reFilterSpace(qLocation)!='' or math.isnan(qLocation)==False:
         addfilter += f' near:"{reFilterSpace(qLocation)}"'
     if qWithinTime == '':
         if qStartTime != '':
@@ -95,40 +97,26 @@ def grapTweets(name, cashTag, qFilter, qFilterLinks, qFilterReplies, lang, qFilt
             break
     return pd.DataFrame(tweets, columns=['date', 'id', 'content', 'username', 'likes', 'retweets', 'url', 'from_query_id'])
 
-def returnGrap(i, input):
+def returnGrap(row, input, samples=20):
     now = datetime.datetime.now().timestamp()
     # print(
     return grapTweets(
-        # input.iloc[i:0],
-        # input.iloc[i:1],
-        # input.iloc[i:2],
-        # input.iloc[i:3],
-        # input.iloc[i:4],
-        # input.iloc[i:5],
-        # input.iloc[i:6],
-        # input.iloc[i:7],
-        # input.iloc[i:8],
-        # input.iloc[i:9],
-        # input.iloc[i:10],
-        # input.iloc[i:11],
-        # input.iloc[i:12],
-        input.loc[i: 'name'],
-        input.loc[i: 'cashtag'],
-        input.loc[i: 'qFilter'],
-        input.loc[i: 'qFilterLinks'],
-        input.loc[i: 'qFilterReplies'],
-        input.loc[i: 'lang'],
-        input.loc[i: 'qFilterVerified'],
-        input.loc[i: 'qLocation'],
-        input.loc[i: 'qStartTime'],
-        input.loc[i: 'qEndTime'],
-        input.loc[i: 'qWithinTime'],
-        input.loc[i: 'qMinLike'],
-        input.loc[i: 'qMinRetweets'],
-        input.loc[i: 'qMinReplies'],
-        7, now
+        input.loc[row, 'name'],
+        input.loc[row, 'cashtag'],
+        input.loc[row, 'qFilter'],
+        input.loc[row, 'qFilterLinks'],
+        input.loc[row, 'qFilterReplies'],
+        input.loc[row, 'lang'],
+        input.loc[row, 'qFilterVerified'],
+        input.loc[row, 'qLocation'],
+        input.loc[row, 'qStartTime'],
+        input.loc[row, 'qEndTime'],
+        input.loc[row, 'qWithinTime'],
+        input.loc[row, 'qMinLike'],
+        input.loc[row, 'qMinRetweets'],
+        input.loc[row, 'qMinReplies'],
+        samples, now
     )
-
 
 @app.route('/')
 def hello():
@@ -143,7 +131,10 @@ def lBrands():
         userInput = pd.concat([userInput, pd.DataFrame([brand_list[f'brand{i}']])])
     userInput.reset_index(inplace=True)
     userInput.drop(columns=['index'], inplace=True)
+    # userInput.to_csv('result.csv')
     
+    for i in range(0, len(userInput)):
+        display(returnGrap(userInput[i]))
     return userInput.drop(columns=['id']).to_html()
 
 if __name__ == '__main__':
