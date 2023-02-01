@@ -141,9 +141,10 @@ def lBrands():
     # print(brand_list[f'brand0'])
     for i in range(0, len(brand_list)):
         userInput = pd.concat([userInput, pd.DataFrame([brand_list[f'brand{i}']])])
-    for i in range(0, len(userInput)):
-        display(returnGrap(i, userInput))
-    return returnGrap(0, userInput).to_html
+    userInput.reset_index(inplace=True)
+    userInput.drop(columns=['index'], inplace=True)
+    
+    return userInput.drop(columns=['id']).to_html()
 
 if __name__ == '__main__':
     app.run()
