@@ -6,13 +6,14 @@ const Header = ({brands, add_brand}) => {
         let pass = true;
         if($('#insertBrand').val() == ''){
             alert("Brand Name can't be empty");
-        }else{
-            brands.map((brand) => {
-                if($('#insertBrand').val().toLowerCase() == brand.name.toLowerCase()){
-                    alert("Brand Name can't be repeat");
-                    pass = false;
-                }
-            });
+        }
+        else{
+            // brands.map((brand) => {
+            //     if($('#insertBrand').val().toLowerCase() == brand.name.toLowerCase()){
+            //         alert("Brand Name can't be repeat");
+            //         pass = false;
+            //     }
+            // });
             if (pass){add()}
         }
     }
@@ -35,7 +36,10 @@ const Header = ({brands, add_brand}) => {
                     qEndTime:NaN, 
                     qWithinTime:NaN,
                     qMinLike:0,
-                    qMinRetweets:0
+                    qMinRetweets:0,
+                    qMinReplies:0,
+                    sa_rmEmoji:true,
+                    anaURL:false
                 }];
             });
             resolve("");
@@ -45,7 +49,7 @@ const Header = ({brands, add_brand}) => {
     }
     return (
         <div className="homeHeader">
-            <div>Tweets Sentiment Analysis</div>
+            <div>Tweets Analysis</div>
             <div id="insertInput">Topic: <input id="insertBrand" type="text" autoComplete="off"/><input type="button" value="Insert" onClick={addBrand}/></div>
         </div>
     );

@@ -8,6 +8,7 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import snscrape.modules.twitter as sntwitter
 import re
 import demoji
+import datetime
 
 app = Flask(__name__)
 
@@ -47,7 +48,7 @@ def findURL(content):
 def rmEmoji(content):
     return demoji.replace(content, repl='')
 
-def grapTweets(name, cashTag, qFilter, qFilterLinks, qFilterReplies, lang, qFilterVerified, qLocation, qStartTime, qEndTime, qWithinTime, samples, fromid):
+def grapTweets(name, cashTag, qFilter, qFilterLinks, qFilterReplies, lang, qFilterVerified, qLocation, qStartTime, qEndTime, qWithinTime, qMinLike, qMinRetweets, qMinReplies, samples, fromid):
     # init #
     orCashTag = ''
     qFilterText = ''
@@ -63,8 +64,8 @@ def grapTweets(name, cashTag, qFilter, qFilterLinks, qFilterReplies, lang, qFilt
         addfilter += ' -filter:replies'
     if qFilterVerified:
         addfilter += ' filter:verified'
-    if qLocation != '':
-        addfilter += f' near:{qLocation}'
+    if reFilterSpace(qLocation) != '':
+        addfilter += f' near:"{reFilterSpace(qLocation)}"'
     if qWithinTime == '':
         if qStartTime != '':
             addfilter += f' since_time:{qStartTime}'
@@ -74,7 +75,7 @@ def grapTweets(name, cashTag, qFilter, qFilterLinks, qFilterReplies, lang, qFilt
         addfilter += f' within_time:{qWithinTime}'
 
     ### Grapping ###
-    scraper = sntwitter.TwitterSearchScraper(f'(({name}){cashTag}){qFilterText}{addfilter} lang:{lang}')
+    scraper = sntwitter.TwitterSearchScraper(f'(({name}){cashTag}){qFilterText}{addfilter} lang:{lang} min_retweets:{qMinRetweets} min_faves:{qMinLike} min_replies:{qMinReplies}')
     print(f'(({name}){cashTag}){qFilterText}{addfilter} lang:{lang}')
     tweets = []
     for i, tweet in enumerate(scraper.get_items()):
@@ -94,6 +95,41 @@ def grapTweets(name, cashTag, qFilter, qFilterLinks, qFilterReplies, lang, qFilt
             break
     return pd.DataFrame(tweets, columns=['date', 'id', 'content', 'username', 'likes', 'retweets', 'url', 'from_query_id'])
 
+def returnGrap(i, input):
+    now = datetime.datetime.now().timestamp()
+    # print(
+    return grapTweets(
+        # input.iloc[i:0],
+        # input.iloc[i:1],
+        # input.iloc[i:2],
+        # input.iloc[i:3],
+        # input.iloc[i:4],
+        # input.iloc[i:5],
+        # input.iloc[i:6],
+        # input.iloc[i:7],
+        # input.iloc[i:8],
+        # input.iloc[i:9],
+        # input.iloc[i:10],
+        # input.iloc[i:11],
+        # input.iloc[i:12],
+        input.loc[i: 'name'],
+        input.loc[i: 'cashtag'],
+        input.loc[i: 'qFilter'],
+        input.loc[i: 'qFilterLinks'],
+        input.loc[i: 'qFilterReplies'],
+        input.loc[i: 'lang'],
+        input.loc[i: 'qFilterVerified'],
+        input.loc[i: 'qLocation'],
+        input.loc[i: 'qStartTime'],
+        input.loc[i: 'qEndTime'],
+        input.loc[i: 'qWithinTime'],
+        input.loc[i: 'qMinLike'],
+        input.loc[i: 'qMinRetweets'],
+        input.loc[i: 'qMinReplies'],
+        7, now
+    )
+
+
 @app.route('/')
 def hello():
     return 'Hello world!'
@@ -101,9 +137,13 @@ def hello():
 @app.route('/eBrands', methods=['POST'])
 def lBrands():
     brand_list = request.get_json(force=True)
-    userInput = pd.DataFrame.from_dict(brand_list, orient='index')
-    display(userInput)
-    return str(brand_list)
+    userInput = pd.DataFrame()
+    # print(brand_list[f'brand0'])
+    for i in range(0, len(brand_list)):
+        userInput = pd.concat([userInput, pd.DataFrame([brand_list[f'brand{i}']])])
+    for i in range(0, len(userInput)):
+        display(returnGrap(i, userInput))
+    return returnGrap(0, userInput).to_html
 
 if __name__ == '__main__':
     app.run()

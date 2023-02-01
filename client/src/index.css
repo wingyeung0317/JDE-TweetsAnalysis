@@ -67,3 +67,7 @@ body{
   color: #BFEFF3;
   padding: 8px;
 }
+
+.numInput{
+  width: 40px;
+}
