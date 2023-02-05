@@ -1,51 +1,47 @@
 import {useState} from 'react'
 
 const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
+
     function delBrand(){
         set_brand((prev) => {
-            return prev.filter(item => item.id !== id)
+            return prev.filter(item => item.id != id)
         });
+        // lsupdate();
     }
+    const [anaURL_input, setAnaURL_input] = useState(true)
 
-    const [anaURL_input, setAnaURL_input] = useState(true);
-
-    const [rmURL_checked, set_rmURL_checked] = useState(true);
     const rmURL = () => {
         let next = allInfo.map((contant, i) => {
             if(i === index){
-                contant.qFilterLinks = !rmURL_checked;
+                contant.qFilterLinks = !contant.qFilterLinks;
                 return contant;
             }else{
                 return contant;
             };
         });
-        if (rmURL_checked){
-            setAnaURL_input(false);
+        if (info.qFilterLinks){
+            setAnaURL_input(true);
         }else{
             anaURL_false();
-            setAnaURL_input(true);
+            setAnaURL_input(false);
         }
-        set_rmURL_checked(!rmURL_checked);
         set_brand(next);
         console.log(info);
     };
 
-    const [rmReply_checked, set_rmReply_checked] = useState(true);
     const rmReply = () => {
         let next = allInfo.map((contant, i) => {
             if(i === index){
-                contant.qFilterReplies = !rmReply_checked;
+                contant.qFilterReplies = !contant.qFilterReplies;
                 return contant;
             }else{
                 return contant;
             };
         });
-        set_rmReply_checked(!rmReply_checked);
         set_brand(next);
         console.log(info);
     };
 
-    const [orCashTag, set_orCashTag] = useState('');
     const add_orCashTag = (t) => {
         let next = allInfo.map((contant, i) => {
             if(i === index){
@@ -59,7 +55,6 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
         console.log(info);
     };
 
-    const [filterQ, setFilterQ] = useState('');
     const addFilterQ = (t) => {
         let next = allInfo.map((contant, i) => {
             if(i === index){
@@ -86,22 +81,19 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
         console.log(info);
     };
     
-    const [filVerify_checked, setFilVerify_checked] = useState(false);
     const filVerify = () => {
         let next = allInfo.map((contant, i) => {
             if(i === index){
-                contant.qFilterVerified = !filVerify_checked;
+                contant.qFilterVerified = !contant.qFilterVerified;
                 return contant;
             }else{
                 return contant;
             };
         });
-        setFilVerify_checked(!filVerify_checked);
         set_brand(next);
         console.log(info);
     };
 
-    const [loc, setLoc] = useState('');
     const filLoc = (t) => {
         let next = allInfo.map((contant, i) => {
             if(i === index){
@@ -115,8 +107,6 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
         console.log(info);
     };
 
-    
-    const [minLike, setMinLike] = useState(0);
     const filMinLike = (t) => {
         let next = allInfo.map((contant, i) => {
             if(i === index){
@@ -130,7 +120,6 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
         console.log(info);
     };
 
-    const [minRetweet, setMinRetweet] = useState(0);
     const filMinRetweet = (t) => {
         let next = allInfo.map((contant, i) => {
             if(i === index){
@@ -144,11 +133,10 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
         console.log(info);
     };
 
-    const [minReply, setMinReply] = useState(0);
     const filMinReply = (t) => {
         let next = allInfo.map((contant, i) => {
             if(i === index){
-                contant.qMinRetweets = t;
+                contant.qMinReplies = t;
                 return contant;
             }else{
                 return contant;
@@ -158,32 +146,28 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
         console.log(info);
     };
 
-    const [rmEmoji_checked, setRmEmoji_checked] = useState(true);
     const rmEmoji = () => {
         let next = allInfo.map((contant, i) => {
             if(i === index){
-                contant.sa_rmEmoji = !rmEmoji_checked;
+                contant.sa_rmEmoji = !contant.sa_rmEmoji;
                 return contant;
             }else{
                 return contant;
             };
         });
-        setRmEmoji_checked(!rmEmoji_checked);
         set_brand(next);
         console.log(info);
     };
     
-    const [anaURL_checked, setAnaURL_checked] = useState(false);
     const anaURL = () => {
         let next = allInfo.map((contant, i) => {
             if(i === index){
-                contant.anaURL = !anaURL_checked;
+                contant.anaURL = !contant.anaURL;
                 return contant;
             }else{
                 return contant;
             };
         });
-        setAnaURL_checked(!anaURL_checked);
         set_brand(next);
         console.log(info);
     };
@@ -197,7 +181,6 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
                 return contant;
             };
         });
-        setAnaURL_checked(false);
         set_brand(next);
         console.log(info);
     }
@@ -208,27 +191,27 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
             (Filter Tweets)
             <div>
                 Any alias name OR cashtag? &emsp;
-                <input type="text" placeholder='Use , to separate (can empty)' value={orCashTag} onChange={(event) => {set_orCashTag(event.target.value); add_orCashTag(event.target.value)}}/>
+                <input type="text" placeholder='Use , to separate (can empty)' value={info.cashtag} onChange={(event) => add_orCashTag(event.target.value)}/>
             </div>
             <div>
                 Filter out: (Useful to filter out Junk Tweets) &emsp;
-                <input type="text" placeholder='Use , to separate (can empty)' value={filterQ} onChange={(event) => {setFilterQ(event.target.value); addFilterQ(event.target.value)}}/>
+                <input type="text" placeholder='Use , to separate (can empty)' value={info.qFilter} onChange={(event) => addFilterQ(event.target.value)}/>
             </div>
             <div>
-                <input type="checkbox" checked={rmURL_checked} onChange={rmURL}/>
+                <input type="checkbox" checked={info.qFilterLinks} onChange={rmURL}/>
                 Remove tweets with URL? (Useful to filter out Junk Tweets)
             </div>
             <div>
-                <input type="checkbox" checked={rmReply_checked} onChange={rmReply}/>
+                <input type="checkbox" checked={info.qFilterReplies} onChange={rmReply}/>
                 Remove replies tweets?
             </div>
             <div>
-                <input type="checkbox" checked={filVerify_checked} onChange={filVerify}/>
+                <input type="checkbox" checked={info.qFilterVerified} onChange={filVerify}/>
                 Only tweets from verified user?
             </div>
             <div>
                 langauage &emsp;
-                <select onChange={(event) => {filLang(event.target.value)}}>  
+                <select value={info.lang} onChange={(event) => {filLang(event.target.value)}}>  
                     <option value='af'>Afrikaans</option>
                     <option value='sq'>Albanian</option>
                     <option value='am'>Amharic</option>
@@ -334,31 +317,31 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
             </div>
             <div>
                 Location: &emsp;
-                <input type="text" placeholder='can empty' value={loc} onChange={(event) => {setLoc(event.target.value); filLoc(event.target.value)}}/>
+                <input type="text" placeholder='can empty' value={info.qLocation} onChange={(event) => filLoc(event.target.value)}/>
             </div>
             <div>
                 <span>
                     Likes at least: &nbsp;
-                    <input className='numInput' min='0' type="number" placeholder='0' value={minLike} onChange={(event) => {setMinLike(event.target.value); filMinLike(event.target.value)}}/>
+                    <input className='numInput' min='0' type="number" placeholder='0' value={info.qMinLike} onChange={(event) => filMinLike(event.target.value)}/>
                 </span>
                 <span>
                     &emsp; Retweets at least: &nbsp;
-                    <input className='numInput' min='0' type="number" placeholder='0' value={minRetweet} onChange={(event) => {setMinRetweet(event.target.value); filMinRetweet(event.target.value)}}/>
+                    <input className='numInput' min='0' type="number" placeholder='0' value={info.qMinRetweets} onChange={(event) => filMinRetweet(event.target.value)}/>
                 </span>
                 <span>
                     &emsp; Replies at least:
-                    <input className='numInput' min='0' type="number" placeholder='0' value={minReply} onChange={(event) => {setMinReply(event.target.value); filMinReply(event.target.value)}}/>
+                    <input className='numInput' min='0' type="number" placeholder='0' value={info.qMinReplies} onChange={(event) => filMinReply(event.target.value)}/>
                 </span>
             </div>
             <br />
             (Sentiment Analysis)
             <div>
                 <span>
-                    <input type="checkbox" checked={rmEmoji_checked} onChange={rmEmoji}/>
+                    <input type="checkbox" checked={info.sa_rmEmoji} onChange={rmEmoji}/>
                     Remove emoji
                 </span>
                 <span>
-                    <input type="checkbox" checked={anaURL_checked} onChange={anaURL} disabled={anaURL_input}/>
+                    <input type="checkbox" checked={info.anaURL} onChange={anaURL} disabled={anaURL_input}/>
                     Analyse Sentiment of the URLs in tweets
                 </span>
             </div>

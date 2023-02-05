@@ -1,7 +1,11 @@
 import Brand from './brand';
+import $ from 'jquery'
+import { useState } from 'react';
 
 const List = ({brands, del_brand}) => {
     let cnt = 0
+    // const [updateStatus, forceUpdate] = useState(false);
+    // const lsupdate = () => forceUpdate(!updateStatus);
 
     return (
         <div id="brandList">
