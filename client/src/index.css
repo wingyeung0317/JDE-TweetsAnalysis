@@ -95,7 +95,7 @@ body{
   text-align: center;
 }
 
-#startAnalyse{
+#showAnalyse{
   width: 50%;
   font-size: 32px;
   background-color: rgba(107, 75, 20, 100);
@@ -120,8 +120,8 @@ body{
 }
 
 .df-style{
-  height: 40vh;
-  width: 99.5%;
+  max-height: 40vh;
+  max-width: 99.5%;
   overflow-y: scroll;
   margin-bottom: 2%;
   margin-right: 2%;
