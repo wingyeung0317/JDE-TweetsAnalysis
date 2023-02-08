@@ -34,12 +34,17 @@ const Overlay = ({overlay_content, showContent, set_showContent}) =>{
         $('#overlayContent').html(overlay_content);
     }
 
+    const showAnalyse=()=>{
+        $('#tweets').hide();
+        $('#analysisInfo').show();
+    }
+
     return(
         <div id="overlay">
             <div id="overlayContent">{oc()}</div>
             <div>
                 <span onClick={()=>{set_showContent(false); switchContent(false)}} id='closeOverlay'>XXX Close XXX</span>
-                <span id="startAnalyse">Start Analysing</span>
+                <span id="showAnalyse" onClick={showAnalyse}>Show Analysing</span>
             </div>
             
         </div>

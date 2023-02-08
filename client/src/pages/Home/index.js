@@ -37,21 +37,37 @@ const Home = () => {
                 }
             })
             .fail(function(xhr, status, error){
-                console.log(xhr +'/n'+ status +'/n'+ error)
-                alert('Error occurs when connect to Flask')
+                console.log(xhr +'/n'+ status +'/n'+ error);
+                set_content('Error occurs when connect to Flask');
+                alert('Error occurs when connect to Flask');
+                set_showContent(false);
             })
     }
+
+    // function hideAnalysisFirstRen1(tweets_list, func){
+    //     set_content(tweets_list);
+    //     set_showContent(true);
+    //     console.log(overlay_content);
+    //     func()
+    // }
+
+    // function hideAnalysisFirstRen2(){
+    //     $("#analysisInfo").hide()
+    // }
     
     function grapTweets(val){
         $.post(GET_TWEETS, JSON.stringify(val))
             .done(function(tweets_list){
-                set_content('<div id="dataframes">'+tweets_list+'</div>');
+                set_content(tweets_list);
                 set_showContent(true);
                 console.log(overlay_content);
+                // hideAnalysisFirstRen1(tweets_list, hideAnalysisFirstRen2)
             })
             .fail(function(xhr, status, error){
-                console.log(xhr +'/n'+ status +'/n'+ error)
-                alert('Error occurs when connect to Flask')
+                console.log(xhr +'/n'+ status +'/n'+ error);
+                set_content('Error occurs when grapping tweets');
+                alert('Error occurs when grapping tweets');
+                set_showContent(false);
             })
     }
 

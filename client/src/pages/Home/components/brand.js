@@ -20,6 +20,7 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
             };
         });
         if (info.qFilterLinks){
+            anaURL_false();
             setAnaURL_input(true);
         }else{
             anaURL_false();
