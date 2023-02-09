@@ -1,5 +1,6 @@
 body{
 	background-color: #BFEFF3;
+  padding-bottom: calc(1% + 55px);
 }
 
 .homeHeader{
@@ -66,4 +67,72 @@ body{
   background-color: #14646b;
   color: #BFEFF3;
   padding: 8px;
+}
+
+.numInput{
+  width: 40px;
+}
+
+#overlay{
+  position: fixed;
+  width: 98%;
+  height: 98%;
+  top: 1%;
+  left: 1%;
+  background-color: rgba(17, 17, 17, 75);
+  color: #fff;
+}
+
+#closeOverlay{
+  width: 30%;
+  font-size: 32px;
+  background-color: rgba(20, 100, 107, 100);
+  color: #BFEFF3;
+  padding: 8px;
+  position: fixed;
+  bottom: calc(1% + 12px);
+  left: 3.8%;
+  text-align: center;
+}
+
+#showAnalyse{
+  width: 50%;
+  font-size: 32px;
+  background-color: rgba(107, 75, 20, 100);
+  color: #bff3c8;
+  padding: 8px;
+  position: fixed;
+  bottom: calc(1% + 12px);
+  right: 6.2%;
+  text-align: center;
+}
+
+#overlayContent{
+  position: absolute;
+  left: 1%;
+  overflow: scroll;
+  height: calc(99% - 60px);
+  width: 98%;
+}
+
+.df-date{
+  width: 75px;
+}
+
+.df-style{
+  max-height: 40vh;
+  max-width: 99.5%;
+  overflow-y: scroll;
+  margin-bottom: 2%;
+  margin-right: 2%;
+}
+
+a{
+  color: #aae;
+}
+
+.dataframe{
+  background: rgba(34, 34, 0, 30);
+  height: 100%;
+  width: 100%;
 }

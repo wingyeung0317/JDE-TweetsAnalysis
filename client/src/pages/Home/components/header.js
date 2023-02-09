@@ -6,13 +6,14 @@ const Header = ({brands, add_brand}) => {
         let pass = true;
         if($('#insertBrand').val() == ''){
             alert("Brand Name can't be empty");
-        }else{
-            brands.map((brand) => {
-                if($('#insertBrand').val().toLowerCase() == brand.name.toLowerCase()){
-                    alert("Brand Name can't be repeat");
-                    pass = false;
-                }
-            });
+        }
+        else{
+            // brands.map((brand) => {
+            //     if($('#insertBrand').val().toLowerCase() == brand.name.toLowerCase()){
+            //         alert("Brand Name can't be repeat");
+            //         pass = false;
+            //     }
+            // });
             if (pass){add()}
         }
     }
@@ -21,7 +22,25 @@ const Header = ({brands, add_brand}) => {
         let clear = new Promise((resolve, reject) => {
             add_brand((prevBrand)=>{
                 let value = $('#insertBrand').val();
-                return [...prevBrand, {id:v4(), name:value}];
+                return [...prevBrand, {
+                    id:v4(), 
+                    name:value, 
+                    cashtag:'', 
+                    qFilter:'', 
+                    qFilterLinks:true, 
+                    qFilterReplies:true, 
+                    lang:'en', 
+                    qFilterVerified:false, 
+                    qLocation:'', 
+                    qStartTime:NaN, 
+                    qEndTime:NaN, 
+                    qWithinTime:NaN,
+                    qMinLike:0,
+                    qMinRetweets:0,
+                    qMinReplies:0,
+                    sa_rmEmoji:true,
+                    anaURL:false
+                }];
             });
             resolve("");
         });
@@ -30,8 +49,8 @@ const Header = ({brands, add_brand}) => {
     }
     return (
         <div className="homeHeader">
-            <div>Brands Compare</div>
-            <div id="insertInput">Brand Name: <input id="insertBrand" type="text" autoComplete="off"/><input type="button" value="Insert" onClick={addBrand}/></div>
+            <div>Tweets Analysis</div>
+            <div id="insertInput">Topic: <input id="insertBrand" type="text" autoComplete="off"/><input type="button" value="Insert" onClick={addBrand}/></div>
         </div>
     );
 }
