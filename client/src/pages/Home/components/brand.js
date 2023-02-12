@@ -1,4 +1,5 @@
 import {useState} from 'react'
+import { v4 } from 'uuid';
 
 const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
 
@@ -9,6 +10,8 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
         // lsupdate();
     }
     const [anaURL_input, setAnaURL_input] = useState(true)
+    const [dateHowR, setDateHowR] = useState(false)
+    const [dateHowW, setDateHowW] = useState(false)
 
     const rmURL = () => {
         let next = allInfo.map((contant, i) => {
@@ -27,7 +30,6 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
             setAnaURL_input(false);
         }
         set_brand(next);
-        console.log(info);
     };
 
     const rmReply = () => {
@@ -40,7 +42,6 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
             };
         });
         set_brand(next);
-        console.log(info);
     };
 
     const add_orCashTag = (t) => {
@@ -53,7 +54,6 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
             };
         });
         set_brand(next);
-        console.log(info);
     };
 
     const addFilterQ = (t) => {
@@ -66,7 +66,6 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
             };
         });
         set_brand(next);
-        console.log(info);
     };
     
     const filLang = (t) => {
@@ -79,7 +78,6 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
             };
         });
         set_brand(next);
-        console.log(info);
     };
     
     const filVerify = () => {
@@ -92,7 +90,6 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
             };
         });
         set_brand(next);
-        console.log(info);
     };
 
     const filLoc = (t) => {
@@ -105,7 +102,30 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
             };
         });
         set_brand(next);
-        console.log(info);
+    };
+
+    const filStartDate = (t) => {
+        let next = allInfo.map((contant, i) => {
+            if(i === index){
+                contant.qStartTime = t;
+                return contant;
+            }else{
+                return contant;
+            };
+        });
+        set_brand(next);
+    };
+
+    const filEndDate = (t) => {
+        let next = allInfo.map((contant, i) => {
+            if(i === index){
+                contant.qEndTime = t;
+                return contant;
+            }else{
+                return contant;
+            };
+        });
+        set_brand(next);
     };
 
     const filMinLike = (t) => {
@@ -118,7 +138,6 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
             };
         });
         set_brand(next);
-        console.log(info);
     };
 
     const filMinRetweet = (t) => {
@@ -131,7 +150,6 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
             };
         });
         set_brand(next);
-        console.log(info);
     };
 
     const filMinReply = (t) => {
@@ -144,7 +162,30 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
             };
         });
         set_brand(next);
-        console.log(info);
+    };
+
+    const filWithinTime = (t) => {
+        let next = allInfo.map((contant, i) => {
+            if(i === index){
+                contant.qWithinTime = t;
+                return contant;
+            }else{
+                return contant;
+            };
+        });
+        set_brand(next);
+    };
+
+    const filSamples = (t) => {
+        let next = allInfo.map((contant, i) => {
+            if(i === index){
+                contant.samples = t;
+                return contant;
+            }else{
+                return contant;
+            };
+        });
+        set_brand(next);
     };
 
     const rmEmoji = () => {
@@ -157,7 +198,6 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
             };
         });
         set_brand(next);
-        console.log(info);
     };
     
     const anaURL = () => {
@@ -170,7 +210,6 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
             };
         });
         set_brand(next);
-        console.log(info);
     };
 
     const anaURL_false = () => {
@@ -183,7 +222,51 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
             };
         });
         set_brand(next);
-        console.log(info);
+    }
+
+    const dateNull = () =>{
+        setDateHowR(true)
+        setDateHowW(true)
+        let next = allInfo.map((contant, i) => {
+            if(i === index){
+                contant.qWithinTime = '';
+                contant.qStartTime = NaN;
+                contant.qEndTime = NaN;
+                return contant;
+            }else{
+                return contant;
+            };
+        });
+        set_brand(next);
+    }
+    
+    const dateWithin = () =>{
+        setDateHowR(true);
+        setDateHowW(false);
+        let next = allInfo.map((contant, i) => {
+            if(i === index){
+                contant.qStartTime = NaN;
+                contant.qEndTime = NaN;
+                return contant;
+            }else{
+                return contant;
+            };
+        });
+        set_brand(next);
+    }
+    
+    const dateRange = () => {
+        setDateHowR(false);
+        setDateHowW(true);
+        let next = allInfo.map((contant, i) => {
+            if(i === index){
+                contant.qWithinTime = '';
+                return contant;
+            }else{
+                return contant;
+            };
+        });
+        set_brand(next);
     }
 
     return (
@@ -334,6 +417,36 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
                     <input className='numInput' min='0' type="number" placeholder='0' value={info.qMinReplies} onChange={(event) => filMinReply(event.target.value)}/>
                 </span>
             </div>
+            <div>
+                <span>
+                    <input type="radio" id={'datehow_within'+id} name={id} onChange={dateWithin}/>
+                    <label htmlFor={'datehow_within'+id}>
+                        Within: &nbsp;
+                        <input className='withinInput' type="text" placeholder='e.g.: 180d' value={info.qWithinTime} onChange={(event) => filWithinTime(event.target.value)} disabled={dateHowW}/>
+                    </label>
+                </span>
+                <br />
+                <span>
+                    <input type="radio" id={'datehow_dateSelect'+id} name={id} onChange={dateRange}/>
+                    <label htmlFor={'datehow_dateSelect'+id}>
+                        <span>
+                            Start Date: &nbsp;
+                            <input type="date" value={info.qStartTime} onChange={(event) => filStartDate(event.target.value)} disabled={dateHowR}/>
+                        </span>
+                        <span>
+                            &emsp; End Date:
+                            <input type="date" value={info.qEndTime} onChange={(event) => filEndDate(event.target.value)} disabled={dateHowR}/>
+                        </span>
+                    </label>
+                </span>
+                <br />
+                <span>
+                    <input type="radio" id={'datehow_any'+id} name={id} onChange={dateNull}/>
+                    <label htmlFor={'datehow_any'+id}>
+                        Anytime
+                    </label>
+                </span>
+            </div>
             <br />
             (Sentiment Analysis)
             <div>
@@ -345,6 +458,11 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
                     <input type="checkbox" checked={info.anaURL} onChange={anaURL} disabled={anaURL_input}/>
                     Analyse Sentiment of the URLs in tweets
                 </span>
+            </div><br />
+            <div>
+                How many tweets tou want to grap: &nbsp;
+                <input className='numInput' min='1' type="number" placeholder='20' value={info.samples} onChange={(event) => filSamples(event.target.value)}/>
+
             </div>
             <div className='delBtn'><input type="button" value="Delete" className={sty2} onClick={delBrand}/></div>
         </span>
