@@ -248,7 +248,7 @@ def tweets_list():
     for i in range(0, len(userInput)):
         tweetsGrapped = returnGrap(i, userInput, int(userInput.loc[i, 'samples'])-1)
         tweets = pd.concat([tweets, tweetsGrapped])
-        displaySA += '<div class="analysisResult">'+'<span class="analysis_topic">'+str(userInput.loc[i, 'name'])+'</span>'+': <br>Sum of Sentiment Score = '+str(tweetsGrapped['sa_score'].sum())+'<br>'+graphKeyword(tweetsGrapped, True)+'<br>'+grapKeyword(tweetsGrapped,True)+'<br>'+graphKeyword(tweetsGrapped, False)+'<br>'+grapKeyword(tweetsGrapped,False)+graphPlot(tweetsGrapped)+'</div><br><br><br>'
+        displaySA += '<div class="analysisResult">'+'<span class="analysis_topic">'+str(userInput.loc[i, 'name'])+'</span>'+': <br>Sum of Sentiment Score = '+str(tweetsGrapped['sa_score'].sum())+'<br>'+graphKeyword(tweetsGrapped, True)+'<br>'+grapKeyword(tweetsGrapped,True)+'<br>'+graphKeyword(tweetsGrapped, False)+'<br>'+grapKeyword(tweetsGrapped,False)+'<br>'+graphPlot(tweetsGrapped)+'</div><br><br><br>'
         if userInput.loc[i, 'anaURL']==True:
             __df_urlInTweets = url_in_tweets(tweetsGrapped)
             __df_urlInTweets['from_ID'] = userInput.loc[i, 'id']
