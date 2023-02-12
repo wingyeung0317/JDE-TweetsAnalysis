@@ -34,12 +34,13 @@ const Header = ({brands, add_brand}) => {
                     qLocation:'', 
                     qStartTime:NaN, 
                     qEndTime:NaN, 
-                    qWithinTime:NaN,
+                    qWithinTime:'',
                     qMinLike:0,
                     qMinRetweets:0,
                     qMinReplies:0,
                     sa_rmEmoji:true,
-                    anaURL:false
+                    anaURL:false,
+                    samples: 20
                 }];
             });
             resolve("");
