@@ -19,6 +19,9 @@ import matplotlib.pyplot as plt
 import base64
 from io import BytesIO
 from keybert import KeyBERT
+from importlib import reload
+import matplotlib.dates as mdates
+plt=reload(plt)
 
 app = Flask(__name__)
 
@@ -112,11 +115,9 @@ def grapTweets(name, cashTag, qFilter, qFilterLinks, qFilterReplies, lang, qFilt
         addfilter += f' near:"{reFilterSpace(qLocation)}"' if qLocation!='' else ''
     if (qWithinTime == '') or (qWithinTime=='nan'):
         if str(qStartTime) != 'nan':
-            qStartTime = str(qStartTime).split('.')[0]
-            addfilter += f' since_time:{qStartTime}'
+            addfilter += f' since:{qStartTime}'
         if str(qEndTime) != 'nan':
-            qStartTime = str(qEndTime).split('.')[0]
-            addfilter += f' until_time:{qEndTime}'
+            addfilter += f' until:{qEndTime}'
     else:
         addfilter += f' within_time:{qWithinTime}'
 
@@ -171,7 +172,27 @@ def returnGrap(row, input, samples=20):
         samples
     )
 
+def graphPlot(df):
+    global plt
+    plt=reload(plt)
+    plt.scatter(df['date'], df['sa_score'])
+    plt.axis(True)
+    plt.xlabel='Date'
+    plt.ylabel='Sentiment'
+    plt.axis(ymin=-1, ymax=1)
+    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d/%Y'))
+    plt.gca().xaxis.set_major_locator(mdates.DayLocator())
+    plt.gcf().autofmt_xdate()
+    __tmpfile = BytesIO()
+    plt.savefig(__tmpfile, format='png')
+    __encoded = base64.b64encode(__tmpfile.getvalue()).decode('utf-8')
+    imghtml = '<img class="pltimg" src=\'data:image/png;base64,{}\'>'.format(__encoded)
+    plt.close()
+    return imghtml
+
 def graphKeyword(df, sentiment):
+    global plt
+    plt=reload(plt)
     text = []
     imgMask = loading_color_mask
     if sentiment:
@@ -182,12 +203,13 @@ def graphKeyword(df, sentiment):
         imgMask = dislike_color_mask
     text = ' '.join(text)
     wordcloud = WordCloud(stopwords=stopwords, background_color='white', mask=imgMask, max_words=200).generate(text)
-    plt.axis("off")
+    plt.axis(False)
 
-    tmpfile = BytesIO()
-    wordcloud.to_image().save(tmpfile, format='png')
-    encoded = base64.b64encode(tmpfile.getvalue()).decode('utf-8')
-    imghtml = '<img class="wordcloud" src=\'data:image/png;base64,{}\'>'.format(encoded)
+    __tmpfile = BytesIO()
+    wordcloud.to_image().save(__tmpfile, format='png')
+    __encoded = base64.b64encode(__tmpfile.getvalue()).decode('utf-8')
+    imghtml = '<img class="wordcloud" src=\'data:image/png;base64,{}\'>'.format(__encoded)
+    plt.close()
     return imghtml
 
 def grapKeyword(df, sentiment):
@@ -224,9 +246,9 @@ def tweets_list():
     displaySA = ''
     df_urlInTweets = pd.DataFrame(columns=['textInURL', 'from_ID'])
     for i in range(0, len(userInput)):
-        tweetsGrapped = returnGrap(i, userInput, 19)
+        tweetsGrapped = returnGrap(i, userInput, int(userInput.loc[i, 'samples'])-1)
         tweets = pd.concat([tweets, tweetsGrapped])
-        displaySA += '<div class="analysisResult">'+'<span class="analysis_topic">'+str(userInput.loc[i, 'name'])+'</span>'+': <br>Sum of Sentiment Score = '+str(tweetsGrapped['sa_score'].sum())+'<br>'+graphKeyword(tweetsGrapped, True)+'<br>'+grapKeyword(tweetsGrapped,True)+'<br>'+graphKeyword(tweetsGrapped, False)+'<br>'+grapKeyword(tweetsGrapped,False)+'</div><br><br><br>'
+        displaySA += '<div class="analysisResult">'+'<span class="analysis_topic">'+str(userInput.loc[i, 'name'])+'</span>'+': <br>Sum of Sentiment Score = '+str(tweetsGrapped['sa_score'].sum())+'<br>'+graphKeyword(tweetsGrapped, True)+'<br>'+grapKeyword(tweetsGrapped,True)+'<br>'+graphKeyword(tweetsGrapped, False)+'<br>'+grapKeyword(tweetsGrapped,False)+graphPlot(tweetsGrapped)+'</div><br><br><br>'
         if userInput.loc[i, 'anaURL']==True:
             __df_urlInTweets = url_in_tweets(tweetsGrapped)
             __df_urlInTweets['from_ID'] = userInput.loc[i, 'id']
