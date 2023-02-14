@@ -68,11 +68,12 @@ def url_in_tweets(df):
 
 def reFilterSpace(text):
     text = str(text)
-    if text != '':
-        while text[0] == ' ':
-            text = text[1:]
-        while text[-1] == ' ':
-            text = text[:-1]
+    # if text != '':
+    #     while text[0] == ' ':
+    #         text = text[1:]
+    #     while text[-1] == ' ':
+    #         text = text[:-1]
+    text=text.strip()
     return text
 
 def sentiment_scores(sentence):
@@ -89,7 +90,25 @@ def findURL(content):
 def rmEmoji(content):
     return demoji.replace(content, repl='')
 
-def grapTweets(name, cashTag, qFilter, qFilterLinks, qFilterReplies, lang, qFilterVerified, qLocation, qStartTime, qEndTime, qWithinTime, qMinLike, qMinRetweets, qMinReplies, searchTime, id, sa_rmEmoji, samples):
+def remove_newlines(text):
+    return re.sub(r'\n', ' ', text)
+
+def remove_hashtags(text):
+    return re.sub(r'\#\w+', ' ', text)
+
+def remove_actags(text):
+    return re.sub(r'\@\w+', ' ', text)
+
+def remove_cashtags(text):
+    return re.sub(r'\$[a-zA-Z]+', ' ', text) 
+
+def remove_num(text):
+    return re.sub(r'\d+', ' ', text) 
+
+def remove_punc(text):
+    return re.sub(    r'[~_%$+()=-]+'    , ' ', text)
+
+def grapTweets(name, cashTag, qFilter, qFilterLinks, qFilterReplies, lang, qFilterVerified, qLocation, qStartTime, qEndTime, qWithinTime, qMinLike, qMinRetweets, qMinReplies, searchTime, id, sa_rmEmoji, sa_rmNewLine, sa_rmHashtag, sa_rmCashtag, sa_rmACtag, sa_rmPunc, sa_rmNum, samples):
     # init #
     orCashTag = ''
     qFilterText = ''
@@ -127,7 +146,14 @@ def grapTweets(name, cashTag, qFilter, qFilterLinks, qFilterReplies, lang, qFilt
     print(queryText)
     tweets = []
     for i, tweet in enumerate(scraper.get_items()):
-        sa_score = (TextBlob(rmEmoji(rmURL(tweet.content))).polarity + sentiment_scores(rmEmoji(rmURL(tweet.content)))['compound'])/2 if sa_rmEmoji else (TextBlob(rmURL(tweet.content)).polarity + sentiment_scores(rmURL(tweet.content))['compound'])/2
+        sa_content = rmEmoji(remove_newlines(rmURL(tweet.content))) if sa_rmEmoji else remove_newlines(rmURL(tweet.content))
+        sa_content = remove_newlines(sa_content) if sa_rmNewLine else sa_content
+        sa_content = remove_hashtags(sa_content) if sa_rmHashtag else sa_content
+        sa_content = remove_cashtags(sa_content) if sa_rmCashtag else sa_content
+        sa_content = remove_actags(sa_content) if sa_rmACtag else sa_content
+        sa_content = remove_punc(sa_content) if sa_rmPunc else sa_content
+        sa_content = remove_num(sa_content) if sa_rmNum else sa_content
+        sa_score = (TextBlob(sa_content).polarity + sentiment_scores(sa_content)['compound'])/2
         data = [
             tweet.date,
             tweet.id,
@@ -139,13 +165,14 @@ def grapTweets(name, cashTag, qFilter, qFilterLinks, qFilterReplies, lang, qFilt
             searchTime,
             id,
             name,
-            sa_score
+            sa_score,
+            sa_content
         ]
         tweets.append(data)
         ### Grap how many Data ###
         if i==samples:
             break
-    returnDF = pd.DataFrame(tweets, columns=['date', 'id', 'content', 'username', 'likes', 'retweets', 'url', 'from_query_time', 'from_query_id', 'from_query_name', 'sa_score'])
+    returnDF = pd.DataFrame(tweets, columns=['date', 'id', 'content', 'username', 'likes', 'retweets', 'url', 'from_query_time', 'from_query_id', 'from_query_name', 'sa_score', 'sa_content'])
     returnDF['content'] = returnDF['content'].str.replace("\n", " ")
     return returnDF
 
@@ -169,6 +196,12 @@ def returnGrap(row, input, samples=20):
         input.loc[row, 'searchTime'],
         input.loc[row, 'id'],
         input.loc[row, 'sa_rmEmoji'],
+        input.loc[row, 'sa_rmNewLine'],
+        input.loc[row, 'sa_rmHashtag'],
+        input.loc[row, 'sa_rmCashtag'],
+        input.loc[row, 'sa_rmACtag'],
+        input.loc[row, 'sa_rmPunc'],
+        input.loc[row, 'sa_rmNum'],
         samples
     )
 
@@ -195,6 +228,8 @@ def graphKeyword(df, sentiment):
     plt=reload(plt)
     text = []
     imgMask = loading_color_mask
+    __stopwords=STOPWORDS.copy()
+    __stopwords.update([df.loc[0,'from_query_name']])
     if sentiment:
         text = df[df['sa_score']>0].content.to_list()
         imgMask = like_color_mask
@@ -202,7 +237,7 @@ def graphKeyword(df, sentiment):
         text = df[df['sa_score']<0].content.to_list()
         imgMask = dislike_color_mask
     text = ' '.join(text)
-    wordcloud = WordCloud(stopwords=stopwords, background_color='white', mask=imgMask, max_words=200).generate(text)
+    wordcloud = WordCloud(stopwords=__stopwords, background_color='white', mask=imgMask, max_words=200).generate(text)
     plt.axis(False)
 
     __tmpfile = BytesIO()

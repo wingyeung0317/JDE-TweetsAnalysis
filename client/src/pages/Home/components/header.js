@@ -5,7 +5,7 @@ const Header = ({brands, add_brand}) => {
     function addBrand(){
         let pass = true;
         if($('#insertBrand').val() == ''){
-            alert("Brand Name can't be empty");
+            alert("Topic can't be empty");
         }
         else{
             // brands.map((brand) => {
@@ -39,6 +39,12 @@ const Header = ({brands, add_brand}) => {
                     qMinRetweets:0,
                     qMinReplies:0,
                     sa_rmEmoji:true,
+                    sa_rmNewLine:true,
+                    sa_rmHashtag:false,
+                    sa_rmCashtag:true,
+                    sa_rmACtag:true,
+                    sa_rmPunc:false,
+                    sa_rmNum:false,
                     anaURL:false,
                     samples: 20
                 }];
