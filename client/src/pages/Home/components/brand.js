@@ -199,6 +199,78 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
         });
         set_brand(next);
     };
+
+    const rmNewLine = () => {
+        let next = allInfo.map((contant, i) => {
+            if(i === index){
+                contant.sa_rmNewLine = !contant.sa_rmNewLine;
+                return contant;
+            }else{
+                return contant;
+            };
+        });
+        set_brand(next);
+    };
+
+    const rmHashtag = () => {
+        let next = allInfo.map((contant, i) => {
+            if(i === index){
+                contant.sa_rmHashtag = !contant.sa_rmHashtag;
+                return contant;
+            }else{
+                return contant;
+            };
+        });
+        set_brand(next);
+    };
+
+    const rmCashtag = () => {
+        let next = allInfo.map((contant, i) => {
+            if(i === index){
+                contant.sa_rmCashtag = !contant.sa_rmCashtag;
+                return contant;
+            }else{
+                return contant;
+            };
+        });
+        set_brand(next);
+    };
+
+    const rmACtag = () => {
+        let next = allInfo.map((contant, i) => {
+            if(i === index){
+                contant.sa_rmACtag = !contant.sa_rmACtag;
+                return contant;
+            }else{
+                return contant;
+            };
+        });
+        set_brand(next);
+    };
+
+    const rmPunc = () => {
+        let next = allInfo.map((contant, i) => {
+            if(i === index){
+                contant.sa_rmPunc = !contant.sa_rmPunc;
+                return contant;
+            }else{
+                return contant;
+            };
+        });
+        set_brand(next);
+    };
+
+    const rmNum = () => {
+        let next = allInfo.map((contant, i) => {
+            if(i === index){
+                contant.sa_rmNum = !contant.sa_rmNum;
+                return contant;
+            }else{
+                return contant;
+            };
+        });
+        set_brand(next);
+    };
     
     const anaURL = () => {
         let next = allInfo.map((contant, i) => {
@@ -454,6 +526,32 @@ const Brand = ({id, name, info, allInfo, sty, sty2, set_brand, index}) =>{
                     <input type="checkbox" checked={info.sa_rmEmoji} onChange={rmEmoji}/>
                     Remove emoji
                 </span>
+                <span>
+                    <input type="checkbox" checked={info.sa_rmNewLine} onChange={rmNewLine}/>
+                    Remove \n
+                </span>
+                <span>
+                    <input type="checkbox" checked={info.sa_rmNum} onChange={rmNum}/>
+                    Remove Number
+                </span>
+                <span>
+                    <input type="checkbox" checked={info.sa_rmPunc} onChange={rmPunc}/>
+                    Remove Punctuations (~_%$+()=-)
+                </span>
+                <br />
+                <span>
+                    <input type="checkbox" checked={info.sa_rmHashtag} onChange={rmHashtag}/>
+                    Remove Hashtags
+                </span>
+                <span>
+                    <input type="checkbox" checked={info.sa_rmCashtag} onChange={rmCashtag}/>
+                    Remove Cashtags
+                </span>
+                <span>
+                    <input type="checkbox" checked={info.sa_rmACtag} onChange={rmACtag}/>
+                    Remove Account Tags (@account)
+                </span>
+                <br />
                 <span>
                     <input type="checkbox" checked={info.anaURL} onChange={anaURL} disabled={anaURL_input}/>
                     Analyse Sentiment of the URLs in tweets
