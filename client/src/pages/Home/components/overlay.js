@@ -43,7 +43,7 @@ const Overlay = ({overlay_content, showContent, set_showContent}) =>{
         <div id="overlay">
             <div id="overlayContent">{oc()}</div>
             <div>
-                <span onClick={()=>{set_showContent(false); switchContent(false)}} id='closeOverlay'>XXX Close XXX</span>
+                <span onClick={()=>{set_showContent(false); switchContent(false)}} id='closeOverlay'>Close</span>
                 <span id="showAnalyse" onClick={showAnalyse}>Show Analysing</span>
             </div>
             

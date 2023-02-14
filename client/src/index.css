@@ -140,3 +140,8 @@ a{
 .withinInput{
   width: 65px;
 }
+
+.analysis_topic{
+  font-size: 36px;
+  color: #f2d0cb;
+}
