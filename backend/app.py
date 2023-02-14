@@ -251,6 +251,7 @@ def grapKeyword(df, sentiment):
     text = []
     text = df[df['sa_score']>0].content.to_list() if sentiment else df[df['sa_score']<0].content.to_list()
     text = ' '.join(text)
+    text = remove_actags(rmEmoji(rmURL(text)))
     keywords = kw_model.extract_keywords(text, keyphrase_ngram_range=(1, 3), stop_words='english', highlight=False, top_n=25)
     keywords_list= list(dict(keywords).keys())
     return str(keywords_list)
