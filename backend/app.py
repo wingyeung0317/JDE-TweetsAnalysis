@@ -269,6 +269,13 @@ def grapKeyword(df, sentiment):
     keywords_list= list(dict(keywords).keys())
     return str(keywords_list)
 
+def replaceSQLrecord(pk, table, df):
+    sql = f"SELECT {pk} FROM [twitter_proj].[{table}]"
+    sql_df = pd.read_sql(sql=sql, con=engine)
+    id_list = sql_df['id'].to_list()
+    df = df[df['id'].isin(id_list) == False]
+    df.to_sql(table, con=engine, schema='twitter_proj', if_exists='append', index=False)
+
 @app.route('/')
 def hello():
     return 'Hello world!'
@@ -309,7 +316,8 @@ def tweets_list():
     # for i in tweets['from_query_id'].unique():
     #     tweets[tweets['from_query_id']==i].to_sql(f'result{i}', engine, schema='twitter_proj', if_exists='replace', index=False)
 
-    tweets.to_sql('result', engine, schema='twitter_proj', if_exists='append', index=False)
+    replaceSQLrecord('id', 'tweets', tweets[['id', 'content']])
+    tweets.to_sql('result', engine, 'twitter_proj', if_exists='append', index=False)
 
     df_urlInTweets.to_sql('url_in_tweets', engine, schema='twitter_proj', if_exists='append', index=False)
     
