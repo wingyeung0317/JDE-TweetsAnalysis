@@ -170,7 +170,7 @@ def grapTweets(id, name, cashTag, qFilter, qFilterLinks, qFilterReplies, lang, q
         sa_score = (TextBlob(sa_content).polarity + sentiment_scores(sa_content)['compound'])/2
         data = [
             id,
-            str(tweet.date),
+            tweet.date,
             str(tweet.id),
             tweet.content,
             tweet.user.username,
