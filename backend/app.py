@@ -21,6 +21,20 @@ from io import BytesIO
 from keybert import KeyBERT
 from importlib import reload
 import matplotlib.dates as mdates
+from sqlalchemy import create_engine
+from sqlalchemy.engine import URL
+
+server = 'tweets-analysis.database.windows.net'
+database = 'Tweets_Analysis'
+username = 'wingyeung'
+password = 'jde5_AZURE'
+driver = '{ODBC Driver 18 for SQL Server}'
+odbc_str = 'Driver={ODBC Driver 18 for SQL Server};Server=tcp:tweets-analysis.database.windows.net,1433;Database=Tweets_Analysis;Uid=wingyeung;Pwd=jde5_AZURE;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
+connect_str = URL.create('mssql+pyodbc', query={'odbc_connect':odbc_str})
+# conn = pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password)
+engine = create_engine(connect_str)
+print(engine)
+
 plt=reload(plt)
 
 app = Flask(__name__)
@@ -58,8 +72,8 @@ def url_in_tweets(df):
                 response = requests.get(url, headers=headers, allow_redirects=True)
                 soup = BeautifulSoup(response.text, "html.parser")
                 soupText = rmEmoji(rmURL(soup.getText()))
-                linkInTweets = pd.concat([pd.DataFrame({'textInURL': [soupText], 'SA':[sentiment_scores(soupText)['compound']], 'URL':[url], 'TweetID':[df.loc[i, 'id']]}), linkInTweets], ignore_index=True)
-                linkInTweets['textInURL'] = linkInTweets['textInURL'].str.replace("\n", " ")
+                linkInTweets = pd.concat([pd.DataFrame({'text_in_url': [soupText], 'sa':[sentiment_scores(soupText)['compound']], 'url':[url], 'tweet_id':[df.loc[i, 'id']]}), linkInTweets], ignore_index=True)
+                linkInTweets['text_in_url'] = linkInTweets['text_in_url'].str.replace("\n", " ")
             except:
                 print(f'{url} not accessable')
         # if i == 7:
@@ -108,7 +122,7 @@ def remove_num(text):
 def remove_punc(text):
     return re.sub(    r'[~_%$+()=-]+'    , ' ', text)
 
-def grapTweets(name, cashTag, qFilter, qFilterLinks, qFilterReplies, lang, qFilterVerified, qLocation, qStartTime, qEndTime, qWithinTime, qMinLike, qMinRetweets, qMinReplies, searchTime, id, sa_rmEmoji, sa_rmNewLine, sa_rmHashtag, sa_rmCashtag, sa_rmACtag, sa_rmPunc, sa_rmNum, samples):
+def grapTweets(id, name, cashTag, qFilter, qFilterLinks, qFilterReplies, lang, qFilterVerified, qLocation, qStartTime, qEndTime, qWithinTime, qMinLike, qMinRetweets, qMinReplies, sa_rmEmoji, sa_rmNewLine, sa_rmHashtag, sa_rmCashtag, sa_rmACtag, sa_rmPunc, sa_rmNum, samples):
     # init #
     orCashTag = ''
     qFilterText = ''
@@ -155,30 +169,31 @@ def grapTweets(name, cashTag, qFilter, qFilterLinks, qFilterReplies, lang, qFilt
         sa_content = remove_num(sa_content) if sa_rmNum else sa_content
         sa_score = (TextBlob(sa_content).polarity + sentiment_scores(sa_content)['compound'])/2
         data = [
-            tweet.date,
-            tweet.id,
+            id,
+            str(tweet.date),
+            str(tweet.id),
             tweet.content,
             tweet.user.username,
             tweet.likeCount,
             tweet.retweetCount,
             tweet.url,
-            searchTime,
-            id,
             name,
             sa_score,
-            sa_content
+            sa_content,
         ]
         tweets.append(data)
         ### Grap how many Data ###
         if i==samples:
             break
-    returnDF = pd.DataFrame(tweets, columns=['date', 'id', 'content', 'username', 'likes', 'retweets', 'url', 'from_query_time', 'from_query_id', 'from_query_name', 'sa_score', 'sa_content'])
+    returnDF = pd.DataFrame(tweets, columns=['index', 'date', 'id', 'content', 'username', 'likes', 'retweets', 'url', 'from_query_name', 'sa_score', 'sa_content'])
     returnDF['content'] = returnDF['content'].str.replace("\n", " ")
+    # returnDF['date'] = pd.to_datetime(returnDF['date'])
     return returnDF
 
 def returnGrap(row, input, samples=20):
     # print(
     return grapTweets(
+        input.loc[row, 'id'],
         input.loc[row, 'name'],
         input.loc[row, 'cashtag'],
         input.loc[row, 'qFilter'],
@@ -193,8 +208,6 @@ def returnGrap(row, input, samples=20):
         input.loc[row, 'qMinLike'],
         input.loc[row, 'qMinRetweets'],
         input.loc[row, 'qMinReplies'],
-        input.loc[row, 'searchTime'],
-        input.loc[row, 'id'],
         input.loc[row, 'sa_rmEmoji'],
         input.loc[row, 'sa_rmNewLine'],
         input.loc[row, 'sa_rmHashtag'],
@@ -272,41 +285,40 @@ def tweets_list():
     now = datetime.datetime.now()
     for i in range(0, len(brand_list)):
         userInput = pd.concat([userInput, pd.DataFrame([brand_list[f'brand{i}']])])
-    userInput['searchTime'] = now
+    userInput['id'] = f'{now}_'+userInput['id']
     userInput.reset_index(inplace=True)
     userInput.drop(columns=['index'], inplace=True)
     userInput = userInput.fillna(value=np.nan)
-    # userInput.to_csv('userInput.csv')
+    userInput.to_sql('userInput', engine, schema='twitter_proj', if_exists='append', index=False)
     
     tweets = pd.DataFrame()
     displaySA = ''
-    df_urlInTweets = pd.DataFrame(columns=['textInURL', 'from_ID'])
+    df_urlInTweets = pd.DataFrame(columns=['text_in_url', 'from_query_ID'])
     for i in range(0, len(userInput)):
         tweetsGrapped = returnGrap(i, userInput, int(userInput.loc[i, 'samples'])-1)
         tweets = pd.concat([tweets, tweetsGrapped])
         displaySA += '<div class="analysisResult">'+'<span class="analysis_topic">'+str(userInput.loc[i, 'name'])+'</span>'+': <br>Sum of Sentiment Score = '+str(tweetsGrapped['sa_score'].sum())+'<br>'+graphKeyword(tweetsGrapped, True)+'<br>'+grapKeyword(tweetsGrapped,True)+'<br>'+graphKeyword(tweetsGrapped, False)+'<br>'+grapKeyword(tweetsGrapped,False)+'<br>'+graphPlot(tweetsGrapped)+'</div><br><br><br>'
         if userInput.loc[i, 'anaURL']==True:
             __df_urlInTweets = url_in_tweets(tweetsGrapped)
-            __df_urlInTweets['from_ID'] = userInput.loc[i, 'id']
-            __df_urlInTweets['from_query_name'] = userInput.loc[i, 'name']
-            __df_urlInTweets = __df_urlInTweets.drop_duplicates(['textInURL']) #remove same content
+            __df_urlInTweets['from_query_ID'] = userInput.loc[i, 'id']
+            __df_urlInTweets = __df_urlInTweets.drop_duplicates(['text_in_url']) #remove same content
             df_urlInTweets = pd.concat([df_urlInTweets, __df_urlInTweets])
 
     # tweets_list_by_queryID = [tweets[tweets['from_query_id']==i] for i in tweets['from_query_id'].unique()]
 
     # for i in tweets['from_query_id'].unique():
-    #     tweets[tweets['from_query_id']==i].to_csv(f'result{i}.csv')
+    #     tweets[tweets['from_query_id']==i].to_sql(f'result{i}', engine, schema='twitter_proj', if_exists='replace', index=False)
 
-    # tweets.to_csv('allResult.csv')
+    tweets.to_sql('result', engine, schema='twitter_proj', if_exists='append', index=False)
 
-    # df_urlInTweets.to_csv('url_in_tweets.csv')
+    df_urlInTweets.to_sql('url_in_tweets', engine, schema='twitter_proj', if_exists='append', index=False)
     
-    displayTweets = ['<div class="df-style">'+tweets[tweets['from_query_id']==i].drop(columns=['from_query_time', 'from_query_id', 'id'], inplace=False).to_html(render_links=True, justify='center', formatters={
+    displayTweets = ['<div class="df-style">'+tweets[tweets['index']==i].drop(columns=['index', 'id'], inplace=False).to_html(render_links=True, justify='center', formatters={
         'date': lambda __date: ' <div class="df-date"> '+' <br><br> +'.join(str(__date).split('+'))+' </div> ',
         'url': lambda __url: '<a href="'+__url+'">Click me</a>'
-    }, escape=False)+'</div>' for i in tweets['from_query_id'].unique()]
+    }, escape=False)+'</div>' for i in tweets['index'].unique()]
 
-    displayUrlInTweets = ['<div class="df-style">'+df_urlInTweets[df_urlInTweets['from_ID']==i].query('textInURL != ""').drop(columns=['from_ID'], inplace=False).to_html(render_links=True, justify='center')+'</div>' for i in df_urlInTweets['from_ID'].unique()]
+    displayUrlInTweets = ['<div class="df-style">'+df_urlInTweets[df_urlInTweets['from_query_ID']==i].query('text_in_url != ""').drop(columns=['from_query_ID'], inplace=False).to_html(render_links=True, justify='center')+'</div>' for i in df_urlInTweets['from_query_ID'].unique()]
 
     return '<div id="tweets">'+''.join(displayTweets)+'</div>' + '<div id="analysisInfo"> '+''.join(displayUrlInTweets)+displaySA+'</div><script>$("#analysisInfo").hide()</script>'
 
