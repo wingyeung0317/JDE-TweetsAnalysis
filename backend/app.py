@@ -273,6 +273,7 @@ def replaceSQLrecord(pk, table, df):
     sql = f"SELECT {pk} FROM [twitter_proj].[{table}]"
     sql_df = pd.read_sql(sql=sql, con=engine)
     id_list = sql_df['id'].to_list()
+    df.drop_duplicates('id')
     df = df[df['id'].isin(id_list) == False]
     df.to_sql(table, con=engine, schema='twitter_proj', if_exists='append', index=False)
 
