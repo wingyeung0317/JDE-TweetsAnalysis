@@ -26,87 +26,84 @@
     1. Run ```python3 -m pip install -r requirment.txt```
     1. Run ```flask run --host=0.0.0.0``` or 
     ```flask run``` if you only use it at a local PC
-1. - If you want to use your own SQL. 
-        1.Modify ```./backend/app.py```, retype your SQL connection to the variable ```connect_str``` (Line: 33)
-        2. A sample build of SQL:
-        ```
-        CREATE TABLE [twitter_proj].[userInput] (
-            "id" CHAR(63)   NOT NULL,
-            "name" VARCHAR(MAX)   NOT NULL,
-            "cashtag" VARCHAR(MAX)   NULL,
-            "qFilter" VARCHAR(MAX)   NULL,
-            "qFilterLinks" BIT   NOT NULL,
-            "qFilterReplies" BIT   NOT NULL,
-            "lang" VARCHAR(MAX)   NOT NULL,
-            "qFilterVerified" BIT   NOT NULL,
-            "qLocation" VARCHAR(MAX)   NULL,
-            "qStartTime" VARCHAR(MAX)   NULL,
-            "qEndTime" VARCHAR(MAX)   NULL,
-            "qWithinTime" VARCHAR(MAX)   NULL,
-            "qMinLike" INT   NOT NULL,
-            "qMinRetweets" INT   NOT NULL,
-            "qMinReplies" INT   NOT NULL,
-            "sa_rmEmoji" BIT   NOT NULL,
-            "sa_rmNewLine" BIT   NOT NULL,
-            "sa_rmHashtag" BIT   NOT NULL,
-            "sa_rmCashtag" BIT   NOT NULL,
-            "sa_rmACtag" BIT   NOT NULL,
-            "sa_rmPunc" BIT   NOT NULL,
-            "sa_rmNum" BIT   NOT NULL,
-            "anaURL" BIT   NOT NULL,
-            "samples" INT   NOT NULL,
-            CONSTRAINT "pk_userInput" PRIMARY KEY (
-                "id"
-            )
-        );
+1. 
+    1.Modify ```./backend/app.py```, retype your SQL connection to the variable ```connect_str``` (Line: 33)
+    2. A sample build of SQL:
+    ```
+    CREATE TABLE [twitter_proj].[userInput] (
+        "id" CHAR(63)   NOT NULL,
+        "name" VARCHAR(MAX)   NOT NULL,
+        "cashtag" VARCHAR(MAX)   NULL,
+        "qFilter" VARCHAR(MAX)   NULL,
+        "qFilterLinks" BIT   NOT NULL,
+        "qFilterReplies" BIT   NOT NULL,
+        "lang" VARCHAR(MAX)   NOT NULL,
+        "qFilterVerified" BIT   NOT NULL,
+        "qLocation" VARCHAR(MAX)   NULL,
+        "qStartTime" VARCHAR(MAX)   NULL,
+        "qEndTime" VARCHAR(MAX)   NULL,
+        "qWithinTime" VARCHAR(MAX)   NULL,
+        "qMinLike" INT   NOT NULL,
+        "qMinRetweets" INT   NOT NULL,
+        "qMinReplies" INT   NOT NULL,
+        "sa_rmEmoji" BIT   NOT NULL,
+        "sa_rmNewLine" BIT   NOT NULL,
+        "sa_rmHashtag" BIT   NOT NULL,
+        "sa_rmCashtag" BIT   NOT NULL,
+        "sa_rmACtag" BIT   NOT NULL,
+        "sa_rmPunc" BIT   NOT NULL,
+        "sa_rmNum" BIT   NOT NULL,
+        "anaURL" BIT   NOT NULL,
+        "samples" INT   NOT NULL,
+        CONSTRAINT "pk_userInput" PRIMARY KEY (
+            "id"
+        )
+    );
 
-        CREATE TABLE [twitter_proj].[result] (
-            "index" CHAR(63)   NOT NULL,
-            "date" VARCHAR(MAX)   NOT NULL,
-            "id" CHAR(19)   NOT NULL,
-            "content" VARCHAR(MAX)   NOT NULL,
-            "username" VARCHAR(MAX)   NOT NULL,
-            "likes" INT   NOT NULL,
-            "retweets" INT   NOT NULL,
-            "url" VARCHAR(MAX)   NOT NULL,
-            "from_query_name" VARCHAR(MAX)   NOT NULL,
-            "sa_score" FLOAT   NOT NULL,
-            "sa_content" VARCHAR(MAX)   NOT NULL
-        );
+    CREATE TABLE [twitter_proj].[result] (
+        "index" CHAR(63)   NOT NULL,
+        "date" VARCHAR(MAX)   NOT NULL,
+        "id" CHAR(19)   NOT NULL,
+        "content" VARCHAR(MAX)   NOT NULL,
+        "username" VARCHAR(MAX)   NOT NULL,
+        "likes" INT   NOT NULL,
+        "retweets" INT   NOT NULL,
+        "url" VARCHAR(MAX)   NOT NULL,
+        "from_query_name" VARCHAR(MAX)   NOT NULL,
+        "sa_score" FLOAT   NOT NULL,
+        "sa_content" VARCHAR(MAX)   NOT NULL
+    );
 
-        CREATE TABLE [twitter_proj].[url_in_tweets] (
-            "text_in_url" VARCHAR(MAX)   NULL,
-            "from_query_ID" CHAR(63)   NOT NULL,
-            "sa" FLOAT   NULL,
-            "url" VARCHAR(MAX)   NOT NULL,
-            "tweet_id" CHAR(19)   NOT NULL
-        );
+    CREATE TABLE [twitter_proj].[url_in_tweets] (
+        "text_in_url" VARCHAR(MAX)   NULL,
+        "from_query_ID" CHAR(63)   NOT NULL,
+        "sa" FLOAT   NULL,
+        "url" VARCHAR(MAX)   NOT NULL,
+        "tweet_id" CHAR(19)   NOT NULL
+    );
 
-        CREATE TABLE [twitter_proj].[tweets] (
-            "id" CHAR(19)   NOT NULL,
-            "content" VARCHAR(MAX)   NULL,
-            CONSTRAINT "pk_tweets" PRIMARY KEY (
-                "id"
-            )
-        );
+    CREATE TABLE [twitter_proj].[tweets] (
+        "id" CHAR(19)   NOT NULL,
+        "content" VARCHAR(MAX)   NULL,
+        CONSTRAINT "pk_tweets" PRIMARY KEY (
+            "id"
+        )
+    );
 
-        ALTER TABLE [twitter_proj].[result] ADD CONSTRAINT "fk_result_index" FOREIGN KEY("index")
-        REFERENCES [twitter_proj].[userInput] ("id");
+    ALTER TABLE [twitter_proj].[result] ADD CONSTRAINT "fk_result_index" FOREIGN KEY("index")
+    REFERENCES [twitter_proj].[userInput] ("id");
 
-        ALTER TABLE [twitter_proj].[result] ADD CONSTRAINT "fk_result_id" FOREIGN KEY("id")
-        REFERENCES [twitter_proj].[tweets] ("id");
+    ALTER TABLE [twitter_proj].[result] ADD CONSTRAINT "fk_result_id" FOREIGN KEY("id")
+    REFERENCES [twitter_proj].[tweets] ("id");
 
-        ALTER TABLE [twitter_proj].[url_in_tweets] ADD CONSTRAINT "fk_url_in_tweets_from_query_ID" FOREIGN KEY("from_query_ID")
-        REFERENCES [twitter_proj].[userInput] ("id");
+    ALTER TABLE [twitter_proj].[url_in_tweets] ADD CONSTRAINT "fk_url_in_tweets_from_query_ID" FOREIGN KEY("from_query_ID")
+    REFERENCES [twitter_proj].[userInput] ("id");
 
-        ALTER TABLE [twitter_proj].[url_in_tweets] ADD CONSTRAINT "fk_url_in_tweets_tweet_id" FOREIGN KEY("tweet_id")
-        REFERENCES [twitter_proj].[tweets] ("id");
-        ```
-        ![image](https://user-images.githubusercontent.com/121206892/219228476-4fc9d46c-47cd-47eb-88c1-93d830caf041.png)
+    ALTER TABLE [twitter_proj].[url_in_tweets] ADD CONSTRAINT "fk_url_in_tweets_tweet_id" FOREIGN KEY("tweet_id")
+    REFERENCES [twitter_proj].[tweets] ("id");
+    ```
+    ![image](https://user-images.githubusercontent.com/121206892/219228476-4fc9d46c-47cd-47eb-88c1-93d830caf041.png)
 
-
-    - If you want to use our public Azure SQL.
-        1. Download [Azure SQL ODBC driver](https://learn.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server)
 1. The website should be working now.
 1. Your input and the tweets result would be stored at SQL
 1. **Happy Coding to analyse the tweets**
