@@ -1,7 +1,7 @@
 # For Non-Tech Use
 1. Enter [the website](http://tweet-analysis.killicit.com/) that we hosted on Azure 
     - (Running slow due to limited resources)
-    - [User Manual](https://docs.google.com/presentation/d/1f8Gae-UFY7BXIWNZdHmuDy2kzMcpQl-IZh40CutRzro/)
+    - [User Manual By Tomson](https://docs.google.com/presentation/d/1f8Gae-UFY7BXIWNZdHmuDy2kzMcpQl-IZh40CutRzro/)
 1. Using GUI to filter tweets
 1. Select how the sentiment analysis works
 1. Enter how many tweets you want to analyse
