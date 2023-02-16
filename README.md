@@ -26,8 +26,8 @@
     1. Run ```python3 -m pip install -r requirment.txt```
     1. Run ```flask run --host=0.0.0.0``` or 
     ```flask run``` if you only use it at a local PC
-1. 
-    1.Modify ```./backend/app.py```, retype your SQL connection to the variable ```connect_str``` (Line: 33)
+1. Retype your SQL address
+    1. Modify ```./backend/app.py```, retype your SQL connection to the variable ```connect_str``` (Line: 33)
     2. A sample build of SQL:
     ```
     CREATE TABLE [twitter_proj].[userInput] (
