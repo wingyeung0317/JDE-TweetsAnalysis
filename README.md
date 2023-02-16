@@ -18,6 +18,7 @@
 1. Git pull the [Tweets Analysis](https://github.com/wingyeung0317/JDE-TweetsAnalysis)
 1. Download NodeJS
     > While in the ```./client/``` folder
+    1. Retype your localhost on ```./src/client/src/global/constrants.js```
     1. Run ```npm install```
     1. Run ```npm start```
 1. Download Python
