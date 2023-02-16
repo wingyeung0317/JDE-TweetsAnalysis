@@ -101,7 +101,8 @@
         ALTER TABLE [twitter_proj].[url_in_tweets] ADD CONSTRAINT "fk_url_in_tweets_tweet_id" FOREIGN KEY("tweet_id")
         REFERENCES [twitter_proj].[tweets] ("id");
         ```
-        ![SQL Sample Connection](:/4430ffdc1f7b41bdb8843825839661db)
+        ![image](https://user-images.githubusercontent.com/121206892/219228476-4fc9d46c-47cd-47eb-88c1-93d830caf041.png)
+
 
     - If you want to use our public Azure SQL.
         1. Download [Azure SQL ODBC driver](https://learn.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server)
