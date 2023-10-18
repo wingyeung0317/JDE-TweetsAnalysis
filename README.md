@@ -1,3 +1,5 @@
+Since Twitter (now renamed as X) changed their policies, these codes not gonna work anymore, RIP.
+
 # For Non-Tech Use (REMOVED)
 1. Enter [the website](http://tweet-analysis.killicit.com/) that we hosted on Azure(REMOVED)
     - (Running slow due to limited resources)
